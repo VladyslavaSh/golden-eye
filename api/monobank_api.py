@@ -1,46 +1,33 @@
-import requests
-
-from models import XRate, peewee_datetime
-from config import logging, LOGGER_CONFIG
+from api import _Api
 
 
-log = logging.getLogger("MonobankApi")
-handler = logging.FileHandler(LOGGER_CONFIG["file"])
-handler.setLevel(LOGGER_CONFIG["level"])
-handler.setFormatter(LOGGER_CONFIG["formatter"])
-log.addHandler(handler)
-log.setLevel(LOGGER_CONFIG["level"])
+class Api(_Api):
+    def __init__(self):
+        super().__init__("PrivatApi")
 
+    def _update_rate(self, xrate):
+        rate = self._get_monobank_rate(xrate.from_currency, xrate.to_currency)
+        return rate
 
-def update_xrates(from_currency, to_currency):
-    log.info("Started update for: %s=>%s" % (from_currency, to_currency))
-    # get the rate from the DB
-    xrate = XRate.select().where(XRate.from_currency == from_currency,
-                                 XRate.to_currency == to_currency).first()
+    def _get_monobank_rate(self, from_currency, to_currency):
+        response = self._send_request(url="https://api.monobank.ua/bank/currency",
+                                      method="get")
+        response_json = response.json()
+        self.log.debug("Monobank response: %s" % response_json)
+        rate = self._find_rate(response_json, from_currency, to_currency)
 
-    log.debug("rate before: %s", xrate)
-    # get a new value of the rate from the Monobank and save it in the xrate object
-    xrate.rate = get_monobank_rate(from_currency)
-    # update field updated
-    xrate.updated = peewee_datetime.datetime.now()
-    xrate.save()
+        return rate
 
-    log.debug("rate after: %s", xrate)
-    log.info("Finished update for: %s=>%s" % (from_currency, to_currency))
+    def _find_rate(self, response_data, from_currency, to_currency):
+        # monobank_aliases_map = {978: "EUR"}
 
+        # if from_currency not in monobank_aliases_map:
+        #    raise ValueError(f"Invalid from_currency: {from_currency}")
 
-def get_monobank_rate(from_currency):
-    response = requests.get("https://api.monobank.ua/bank/currency")
-    response_json = response.json()
-    log.debug("Monobank response: %s" % response_json)
-    usd_rate = find_usd_rate(response_json)
+        # currency_alias = monobank_aliases_map[from_currency]
 
-    return usd_rate
+        for e in response_data:
+            if e["currencyCodeA"] == from_currency and e["currencyCodeB"] == to_currency:
+                return float(e["rateSell"])
 
-
-def find_usd_rate(response_data):
-    for e in response_data:
-        if e["currencyCodeA"] == 978 and e["currencyCodeB"] == 980:
-            return float(e["rateSell"])
-
-    raise ValueError("Invalid Monobank response: EUR not found")
+        raise ValueError(f"Invalid Monobank response: {from_currency} not found")
