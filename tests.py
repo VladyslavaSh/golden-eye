@@ -1,0 +1,48 @@
+import unittest
+
+import api.test_api
+import models
+import api.privat_api
+import api.monobank_api
+
+
+class Test(unittest.TestCase):
+    def setUp(self):
+        models.init_db()
+
+    def test_main(self):
+        xrate = models.XRate.get(id=1)
+        updated_before = xrate.updated
+        self.assertEqual(xrate.rate, 1.0)
+        api.test_api.update_xrates(840, 980)
+        xrate = models.XRate.get(id=1)
+        updated_after = xrate.updated
+
+        self.assertEqual(xrate.rate, 1.01)
+        self.assertGreater(updated_after, updated_before)
+
+    def test_privat(self):
+        xrate = models.XRate.get(id=1)
+        updated_before = xrate.updated
+        self.assertEqual(xrate.rate, 1.0)
+        api.privat_api.update_xrates(840, 980)
+        xrate = models.XRate.get(id=1)
+        updated_after = xrate.updated
+
+        self.assertGreater(xrate.rate, 25)
+        self.assertGreater(updated_after, updated_before)
+
+    def test_monobank(self):
+        xrate = models.XRate.get(from_currency=978, to_currency=980)
+        updated_before = xrate.updated
+        self.assertEqual(xrate.rate, 1.0)
+        api.monobank_api.update_xrates(978, 980)
+        xrate = models.XRate.get(from_currency=978, to_currency=980)
+        updated_after = xrate.updated
+
+        self.assertGreater(xrate.rate, 25)
+        self.assertGreater(updated_after, updated_before)
+
+
+if __name__ == '__main__':
+    unittest.main()
