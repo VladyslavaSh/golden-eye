@@ -8,7 +8,7 @@
 - Framework: Flask
 - Database: SQLite
 - ORM: Peewee
-- Libraries: requests, peewee, Flask, requests
+- Libraries: requests, peewee, Flask, unittest, traceback, importlib
 - Frontend: Jinja2
 - WSGI: Gunicorn
 - Testing: Pytest
