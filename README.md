@@ -17,7 +17,7 @@
 
 ### External APIs:
 
-- The Ukrainian State Bank PrivatBank: <a href="https://api.privatbank.ua/" target="_blank">https://api.privatbank.ua/</a>
+- The Ukrainian State Bank PrivatBank: <a href="https://api.privatbank.ua/#p24/exchange" target="_blank">https://api.privatbank.ua/#p24/exchange</a>
 - Monobank Universal Bank: <a href="https://api.monobank.ua/docs/" target="_blank">https://api.monobank.ua/docs/</a>
 
 ### Database’s structure:
