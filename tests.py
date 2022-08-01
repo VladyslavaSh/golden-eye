@@ -46,8 +46,15 @@ class Test(unittest.TestCase):
         self.assertIsNotNone(api_log.response_text)
 
         self.assertIn('{"ccy":"USD","base_ccy":"UAH",', api_log.response_text)
+    
+    # check for error with incorrect currency
+    def test_privat_currency_error(self):
+        xrate = models.XRate.get(id=1)
+        self.assertEqual(xrate.rate, 1.0)
 
-        def test_privat_btc(self):
+        self.assertRaises(ValueError, privat_api.Api().update_rate, 978, 980)
+
+    def test_privat_btc(self):
         xrate = models.XRate.get(from_currency=1000, to_currency=840)
         updated_before = xrate.updated
         self.assertEqual(xrate.rate, 1.0)
