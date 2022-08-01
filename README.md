@@ -25,12 +25,13 @@
 
 ### Files:
 
-- `modules.py`
-- `config.py` </br>
+- `modules.py` <br/>
+The creation of models (database tables) and initialisation of the database.
+- `config.py` <br/>
 Parameters for logger configuration, database file path and other settings.
 - `tests.py`
-- `privat_api.py` </br>
+- `privat_api.py` <br/>
 Gets data about the rate to be changed from the database. Sends a request to the api of Privatbank to get the desired rate from the response. Updates the updated field data and the rate value received via api.
-- `monobank_api.py` </br>
+- `monobank_api.py` <br/>
 Gets data about the rate to be changed from the database. Sends a request to the Monobank API, get the desired exchange rate from the JSON response. Updates the data in the 'updated' field and the course value received from the API.
 
