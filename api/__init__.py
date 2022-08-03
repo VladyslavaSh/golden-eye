@@ -1,4 +1,5 @@
 import traceback
+import importlib
 
 import requests
 
@@ -11,6 +12,16 @@ handler.setLevel(LOGGER_CONFIG["level"])
 handler.setFormatter(LOGGER_CONFIG["formatter"])
 
 
+# dynamic module
+def update_rate(from_currency, to_currency):
+    # get the rate from the DB
+    xrate = XRate.select().where(XRate.from_currency == from_currency,
+                                 XRate.to_currency == to_currency).first()
+
+    module = importlib.import_module(f"api.{xrate.module}")
+    module.Api().update_rate(xrate)
+
+
 class _Api:
     def __init__(self, logger_name):
         # create logger
@@ -18,21 +29,17 @@ class _Api:
         self.log.addHandler(handler)
         self.log.setLevel(LOGGER_CONFIG["level"])
 
-    def update_rate(self, from_currency, to_currency):
-        self.log.info("Started update for: %s=>%s" % (from_currency, to_currency))
-        # get the rate from the DB
-        xrate = XRate.select().where(XRate.from_currency == from_currency,
-                                     XRate.to_currency == to_currency).first()
-
+    def update_rate(self, xrate):
+        self.log.info("Started update for: %s" % xrate)
         self.log.debug("rate before: %s", xrate)
-        # get a new value of the rate from the Privat and save it in the xrate object
-        xrate.rate = self._update_rate(xrate)  # call method _update_rate
+        # get a new value of the rate and save it in the xrate object
+        xrate.rate = self._update_rate(xrate)
         # update field updated
         xrate.updated = peewee_datetime.datetime.now()
         xrate.save()
 
         self.log.debug("rate after: %s", xrate)
-        self.log.info("Finished update for: %s=>%s" % (from_currency, to_currency))
+        self.log.info("Finished update for: %s" % xrate)
 
     def _update_rate(self, xrate):
         raise NotImplementedError("_update_rate")
@@ -56,4 +63,3 @@ class _Api:
 
     def _send(self, url, method, data=None, headers=None):
         return requests.request(method=method, url=url, headers=headers, data=data, timeout=HTTP_TIMEOUT)
-
