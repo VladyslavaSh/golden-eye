@@ -143,6 +143,27 @@ class Test(unittest.TestCase):
 
         api.HTTP_TIMEOUT = 15
 
+    def test_coin_uah(self):
+        from_currency = 1000
+        to_currency = 980
+        xrate = models.XRate.get(from_currency=from_currency, to_currency=to_currency)
+        updated_before = xrate.updated
+        self.assertEqual(xrate.rate, 1.0)
+
+        api.update_rate(from_currency, to_currency)
+
+        xrate = models.XRate.get(from_currency=from_currency, to_currency=to_currency)
+        updated_after = xrate.updated
+
+        self.assertGreater(xrate.rate, 10000)
+        self.assertGreater(updated_after, updated_before)
+
+        api_log = models.ApiLog.select().order_by(models.ApiLog.created.desc()).first()
+
+        self.assertIsNotNone(api_log)
+        self.assertEqual(api_log.request_url, "https://rest.coinapi.io/v1/exchangerate/BTC/UAH")
+        self.assertIsNotNone(api_log.response_text)
+
 
 if __name__ == '__main__':
     unittest.main()
