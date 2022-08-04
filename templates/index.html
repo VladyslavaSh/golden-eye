@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="Vladyslava Shekula">
+    <title>Home</title>
+</head>
+<body>
+    <header>
+        <div class="header">
+            <a class="active" href="/">Home</a>
+            <a href="/xrates">Rates</a>
+            <a href="/api">API</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 style="font-size: xxx-large; color: deepskyblue; margin-bottom: 75px;">Golden Eye</h1>
+        <p><strong>Golden Eye</strong> is a web service that tracks and collects current exchange rates from public APIs.
+            Here you can view the exchange rates of such currencies as the Ukrainian hryvnia (UAH), US dollar (USD), euro (EUR) and bitcoin (BTC).
+            All indicated exchange rates are periodically automatically updated and it is also possible to update them manually, together and
+            separately. This website also provides its own API for receiving exchange rates in formats such as JSON and XML.</p>
+        <hr style="border-color: lightgray; margin: 50px 0 50px 0">
+        <h4 style="margin-left: 20px">External APIs:</h4>
+        <ul>
+            <li>PrivatBank API: <a href="https://api.privatbank.ua/#p24/exchange" style="color: deepskyblue">https://api.privatbank.ua/#p24/exchange</a></li>
+            <li>Monobank API: <a href="https://api.monobank.ua/docs/" style="color: deepskyblue">https://api.monobank.ua/docs/</a></li>
+            <li>CoinAPI: <a href="https://www.coinapi.io/" style="color: deepskyblue">https://www.coinapi.io/</a></li>
+        </ul>
+        <hr style="border-color: lightgray; margin: 50px 0 50px 0">
+        <h4 style="margin-left: 20px">Currencies:</h4>
+        <ul style="margin-bottom: 45px;">
+            <li>USD (US dollar)</li>
+            <li>EUR (Euro)</li>
+            <li>UAH (Ukrainian hryvnia)</li>
+            <li>BTC (Bitcoin)</li>
+        </ul>
+        <a href="/xrates" class="button">See the exchange rates</a>
+        <hr style="border-color: lightgray; margin: 50px 0 50px 0">
+        <h4 style="margin-left: 20px">Aliases:</h4>
+        <table style="text-align:center; margin-left: 20px;">
+            <thead>
+                <td>Currency</td><td>Alias</td>
+            </thead>
+            <tr><td>USD</td><td>840</td></tr>
+            <tr><td>EUR</td><td>978</td></tr>
+            <tr><td>UAH</td><td>980</td></tr>
+            <tr><td>BTC</td><td>1000</td></tr>
+        </table>
+        <hr style="border-color: lightgray; margin: 50px 0 50px 0">
+        <h4 style="margin-left: 20px">Golden Eye's API:</h4>
+        <p style="margin: 0 0 45px 20px">API that returns the exchange rate in JSON or XML format.</p>
+        <a href="/api" class="button">Use Golden Eye's API</a>
+        <hr style="border-color: lightgray; margin: 50px 0 50px 0">
+    </div>
+
+    <footer>
+        <h4 style="color: gray; text-align: center;">Vladyslava Shekula © 2022</h4>
+    </footer>
+</body>
+</html>
+
+<style>
+    .header {
+        overflow: hidden;
+        background-color: #f1f1f1;
+        padding: 20px 20px;
+        width: 100%;
+    }
+    .header a {
+        float: top;
+        text-align: center;
+        color: black;
+        margin-left: 320px;
+        padding: 12px;
+        text-decoration: none;
+        font-size: 18px;
+        line-height: 25px;
+        border-radius: 4px;
+    }
+    .header a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+    .header a.active {
+        background-color: deepskyblue;
+        color: white;
+    }
+    @media screen and (max-width: 500px) {
+        .header a {
+            float: none;
+            display: block;
+            text-align: left;
+        }
+    }
+    .container{
+        width: 60%;
+        margin: 0 auto;
+        font-size: large;
+        font-family: Arial, Helvetica, sans-serif;
+        letter-spacing: 1px;
+        padding-top: 60px;
+    }
+    .button{
+        text-decoration: none;
+        margin-left: 20px;
+        padding: 10px 20px;
+        background-color: deepskyblue;
+        color: white;
+        border-radius: 10px;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+</style>
